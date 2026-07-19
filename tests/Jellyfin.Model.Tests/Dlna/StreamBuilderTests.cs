@@ -371,6 +371,144 @@ namespace Jellyfin.Model.Tests
             Assert.Equal(streamInfo?.SubtitleStreamIndex, options.SubtitleStreamIndex);
         }
 
+        [Theory]
+        // Direct play: container and codec supported
+        [InlineData("Chrome", "mp3-mp3-320k", PlayMethod.DirectPlay, (TranscodeReason)0, "mp3", MediaStreamProtocol.http)]
+        [InlineData("Chrome", "flac-flac-1400k", PlayMethod.DirectPlay, (TranscodeReason)0, "flac", MediaStreamProtocol.http)]
+        // Direct stream: only the container is unsupported, so the stream is remuxed
+        [InlineData("Chrome", "mka-opus-256k", PlayMethod.DirectStream, TranscodeReason.ContainerNotSupported, "ts", MediaStreamProtocol.http)]
+        // Remuxing to HLS ts is rejected for codecs not allowed in ts, forcing a transcode
+        [InlineData("Chrome", "mka-flac-hls-1400k", PlayMethod.Transcode, TranscodeReason.ContainerNotSupported | TranscodeReason.AudioCodecNotSupported, "mp4", MediaStreamProtocol.hls)]
+        // Transcode: codec unsupported in an otherwise supported container
+        [InlineData("Chrome", "m4a-alac-1400k", PlayMethod.Transcode, TranscodeReason.AudioCodecNotSupported, "mp4", MediaStreamProtocol.hls)]
+        // Transcode: bitrate exceeds the device limit
+        [InlineData("LowBandwidth", "mp3-mp3-320k", PlayMethod.Transcode, TranscodeReason.ContainerBitrateExceedsLimit, "", MediaStreamProtocol.http)]
+        public async Task BuildAudioItemSimple(string deviceName, string mediaSource, PlayMethod playMethod, TranscodeReason why, string container, MediaStreamProtocol subProtocol)
+        {
+            var options = await GetMediaOptions(deviceName, mediaSource);
+            var streamInfo = GetAudioStreamBuilder().GetOptimalAudioStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(playMethod, streamInfo.PlayMethod);
+            Assert.Equal(why, streamInfo.TranscodeReasons);
+            Assert.Equal(container, streamInfo.Container);
+            Assert.Equal(subProtocol, streamInfo.SubProtocol);
+        }
+
+        [Fact]
+        public async Task BuildAudioItemTranscodeUsesTranscodingProfile()
+        {
+            var options = await GetMediaOptions("Chrome", "m4a-alac-1400k");
+            var streamInfo = GetAudioStreamBuilder().GetOptimalAudioStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(PlayMethod.Transcode, streamInfo.PlayMethod);
+            Assert.Equal(TranscodeReason.AudioCodecNotSupported, streamInfo.TranscodeReasons);
+            Assert.Equal("mp4", streamInfo.Container);
+            Assert.Equal(MediaStreamProtocol.hls, streamInfo.SubProtocol);
+            Assert.Equal("aac", Assert.Single(streamInfo.AudioCodecs));
+            Assert.Equal(2, streamInfo.TranscodingMaxAudioChannels);
+            Assert.Equal(384000, streamInfo.AudioBitrate);
+        }
+
+        [Fact]
+        public async Task BuildAudioItemTranscodeHonorsRequestedMaxAudioChannels()
+        {
+            var options = await GetMediaOptions("Chrome", "m4a-alac-1400k");
+            options.MaxAudioChannels = 6;
+
+            var streamInfo = GetAudioStreamBuilder().GetOptimalAudioStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(PlayMethod.Transcode, streamInfo.PlayMethod);
+            Assert.Equal(6, streamInfo.GlobalMaxAudioChannels);
+        }
+
+        [Fact]
+        public async Task BuildAudioItemMaxBitrateCapsAudioBitrate()
+        {
+            var options = await GetMediaOptions("Chrome", "mp3-mp3-320k");
+            options.MaxBitrate = 96000;
+
+            var streamInfo = GetAudioStreamBuilder().GetOptimalAudioStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(PlayMethod.Transcode, streamInfo.PlayMethod);
+            Assert.Equal(TranscodeReason.ContainerBitrateExceedsLimit, streamInfo.TranscodeReasons);
+            Assert.Equal(96000, streamInfo.AudioBitrate);
+        }
+
+        [Fact]
+        public async Task BuildAudioItemForceDirectPlayNormalizesContainer()
+        {
+            var options = await GetMediaOptions("Chrome", "m4a-alac-1400k");
+            options.ForceDirectPlay = true;
+
+            var streamInfo = GetAudioStreamBuilder().GetOptimalAudioStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(PlayMethod.DirectPlay, streamInfo.PlayMethod);
+            Assert.Equal((TranscodeReason)0, streamInfo.TranscodeReasons);
+            Assert.Equal("m4a", streamInfo.Container);
+        }
+
+        [Fact]
+        public async Task BuildAudioItemForceDirectStreamNormalizesContainer()
+        {
+            var options = await GetMediaOptions("Chrome", "m4a-alac-1400k");
+            options.ForceDirectStream = true;
+
+            var streamInfo = GetAudioStreamBuilder().GetOptimalAudioStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(PlayMethod.DirectStream, streamInfo.PlayMethod);
+            Assert.Equal((TranscodeReason)0, streamInfo.TranscodeReasons);
+            Assert.Equal("m4a", streamInfo.Container);
+        }
+
+        [Fact]
+        public async Task GetOptimalVideoStreamPrefersDirectPlayableMediaSource()
+        {
+            var options = await GetMediaOptions("Firefox", "mp4-hevc-ac3-srt-15200k", "mp4-h264-aac-srt-2600k");
+            options.MediaSourceId = null;
+
+            var streamInfo = GetStreamBuilder().GetOptimalVideoStream(options);
+
+            Assert.NotNull(streamInfo);
+            Assert.Equal(PlayMethod.DirectPlay, streamInfo.PlayMethod);
+            Assert.Equal(options.MediaSources[1].Id, streamInfo.MediaSourceId);
+        }
+
+        [Theory]
+        [InlineData("mov,mp4,m4a,3gp,3g2,mj2", DlnaProfileType.Video, "mov")]
+        [InlineData("mov,mp4,m4a,3gp,3g2,mj2", DlnaProfileType.Audio, "m4a")]
+        [InlineData("mkv", DlnaProfileType.Video, "mkv")]
+        [InlineData("avi,ogv", DlnaProfileType.Video, "avi,ogv")]
+        public async Task NormalizeMediaSourceFormatIntoSingleContainerSelectsFirstSupportedFormat(string input, DlnaProfileType type, string expected)
+        {
+            var profile = await TestData<DeviceProfile>("Chrome");
+
+            Assert.Equal(expected, StreamBuilder.NormalizeMediaSourceFormatIntoSingleContainer(input, profile, type));
+        }
+
+        [Fact]
+        public void NormalizeMediaSourceFormatIntoSingleContainerReturnsInputWhenProfileIsNull()
+        {
+            Assert.Equal("mov,mp4", StreamBuilder.NormalizeMediaSourceFormatIntoSingleContainer("mov,mp4", null, DlnaProfileType.Video));
+        }
+
+        [Fact]
+        public async Task NormalizeMediaSourceFormatIntoSingleContainerHonorsPlayProfileOverride()
+        {
+            var profile = await TestData<DeviceProfile>("Chrome");
+
+            var videoProfile = new DirectPlayProfile { Type = DlnaProfileType.Video, Container = "mp4" };
+            Assert.Equal("mp4", StreamBuilder.NormalizeMediaSourceFormatIntoSingleContainer("mov,mp4,m4a", profile, DlnaProfileType.Video, videoProfile));
+
+            var audioProfile = new DirectPlayProfile { Type = DlnaProfileType.Audio, Container = "mp4" };
+            Assert.Equal("mov,mp4,m4a", StreamBuilder.NormalizeMediaSourceFormatIntoSingleContainer("mov,mp4,m4a", profile, DlnaProfileType.Video, audioProfile));
+        }
+
         private StreamInfo? BuildVideoItemSimpleTest(MediaOptions options, PlayMethod? playMethod, TranscodeReason why, string transcodeMode, string transcodeProtocol)
         {
             if (string.IsNullOrEmpty(transcodeProtocol))
@@ -576,6 +714,15 @@ namespace Jellyfin.Model.Tests
         private StreamBuilder GetStreamBuilder()
         {
             var transcodeSupport = new Mock<ITranscoderSupport>();
+            var logger = new NullLogger<StreamBuilderTests>();
+
+            return new StreamBuilder(transcodeSupport.Object, logger);
+        }
+
+        private static StreamBuilder GetAudioStreamBuilder()
+        {
+            var transcodeSupport = new Mock<ITranscoderSupport>();
+            transcodeSupport.Setup(t => t.CanEncodeToAudioCodec(It.IsAny<string>())).Returns(true);
             var logger = new NullLogger<StreamBuilderTests>();
 
             return new StreamBuilder(transcodeSupport.Object, logger);

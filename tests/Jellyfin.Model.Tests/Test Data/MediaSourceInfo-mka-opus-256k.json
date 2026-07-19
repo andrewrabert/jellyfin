@@ -1,0 +1,27 @@
+{
+    "Id": "c0ffee00c0de45d9492d17af77748003",
+    "Path": "/Media/MyAudio-256k.mka",
+    "Container": "mka",
+    "Size": 7680000,
+    "Name": "MyAudio-256k",
+    "RunTimeTicks": 2400000000,
+    "SupportsTranscoding": true,
+    "SupportsDirectStream": true,
+    "SupportsDirectPlay": true,
+    "SupportsProbing": true,
+    "MediaStreams": [
+        {
+            "Codec": "opus",
+            "TimeBase": "1/48000",
+            "DisplayTitle": "Opus - Stereo",
+            "ChannelLayout": "stereo",
+            "BitRate": 256000,
+            "Channels": 2,
+            "SampleRate": 48000,
+            "IsDefault": true,
+            "Index": 0
+        }
+    ],
+    "Bitrate": 256000,
+    "DefaultAudioStreamIndex": 0
+}

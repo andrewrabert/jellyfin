@@ -1,0 +1,27 @@
+{
+    "Id": "c0ffee00c0de45d9492d17af77748001",
+    "Path": "/Media/MyAudio-320k.mp3",
+    "Container": "mp3",
+    "Size": 9600000,
+    "Name": "MyAudio-320k",
+    "RunTimeTicks": 2400000000,
+    "SupportsTranscoding": true,
+    "SupportsDirectStream": true,
+    "SupportsDirectPlay": true,
+    "SupportsProbing": true,
+    "MediaStreams": [
+        {
+            "Codec": "mp3",
+            "TimeBase": "1/44100",
+            "DisplayTitle": "MP3 - Stereo",
+            "ChannelLayout": "stereo",
+            "BitRate": 320000,
+            "Channels": 2,
+            "SampleRate": 44100,
+            "IsDefault": true,
+            "Index": 0
+        }
+    ],
+    "Bitrate": 320000,
+    "DefaultAudioStreamIndex": 0
+}

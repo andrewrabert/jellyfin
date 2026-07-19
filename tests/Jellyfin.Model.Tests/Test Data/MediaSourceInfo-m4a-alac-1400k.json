@@ -1,0 +1,29 @@
+{
+    "Id": "c0ffee00c0de45d9492d17af77748005",
+    "Path": "/Media/MyAudio-1400k.m4a",
+    "Container": "mp4,m4a",
+    "Size": 42000000,
+    "Name": "MyAudio-1400k",
+    "RunTimeTicks": 2400000000,
+    "SupportsTranscoding": true,
+    "SupportsDirectStream": true,
+    "SupportsDirectPlay": true,
+    "SupportsProbing": true,
+    "MediaStreams": [
+        {
+            "Codec": "alac",
+            "CodecTag": "alac",
+            "TimeBase": "1/44100",
+            "DisplayTitle": "ALAC - Stereo",
+            "ChannelLayout": "stereo",
+            "BitRate": 1411000,
+            "BitDepth": 16,
+            "Channels": 2,
+            "SampleRate": 44100,
+            "IsDefault": true,
+            "Index": 0
+        }
+    ],
+    "Bitrate": 1411000,
+    "DefaultAudioStreamIndex": 0
+}
