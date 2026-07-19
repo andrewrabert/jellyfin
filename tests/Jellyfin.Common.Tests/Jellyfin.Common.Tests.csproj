@@ -15,6 +15,7 @@
     </PackageReference>
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="FsCheck.Xunit.v3" />
+    <PackageReference Include="Moq" />
   </ItemGroup>
 
   <ItemGroup>
