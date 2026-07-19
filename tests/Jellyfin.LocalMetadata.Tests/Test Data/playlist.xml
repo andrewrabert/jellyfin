@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Item>
+  <LocalTitle>Roadtrip Mix</LocalTitle>
+  <PlaylistMediaType>Audio</PlaylistMediaType>
+  <OwnerUserId>44658d24-e31a-42f8-9de4-9b25f1f03e19</OwnerUserId>
+  <Shares>
+    <Share>
+      <UserId>e37a4674-9cfd-481c-8ab5-05b1f2d6ecbe</UserId>
+      <CanEdit>true</CanEdit>
+    </Share>
+    <Share>
+      <UserId>not-a-guid</UserId>
+      <CanEdit>true</CanEdit>
+    </Share>
+  </Shares>
+  <PlaylistItems>
+    <PlaylistItem>
+      <Path>/music/song one.mp3</Path>
+    </PlaylistItem>
+    <PlaylistItem>
+      <Path>/music/song two.mp3</Path>
+    </PlaylistItem>
+    <PlaylistItem />
+  </PlaylistItems>
+</Item>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Item>
+  <ContentRating>PG-13</ContentRating>
+  <LockData>true</LockData>
+  <LockedFields>Name|Overview</LockedFields>
+  <LocalTitle>The Avengers Collection</LocalTitle>
+  <OriginalTitle>Marvel's The Avengers Collection</OriginalTitle>
+  <SortTitle>avengers collection</SortTitle>
+  <Overview>A collection of Avengers movies.</Overview>
+  <CustomRating>Family</CustomRating>
+  <CriticRating>82</CriticRating>
+  <Rating>7.5</Rating>
+  <PremiereDate>2012-04-25</PremiereDate>
+  <ProductionYear>2012</ProductionYear>
+  <RunningTime>142</RunningTime>
+  <Language>en</Language>
+  <CountryCode>US</CountryCode>
+  <DisplayOrder>PremiereDate</DisplayOrder>
+  <TagLines>
+    <Tagline>Some assembly required.</Tagline>
+  </TagLines>
+  <Genres>
+    <Genre>Action</Genre>
+    <Genre>Adventure</Genre>
+  </Genres>
+  <Studios>
+    <Studio>Marvel Studios</Studio>
+  </Studios>
+  <Tags>
+    <Tag>Superhero</Tag>
+  </Tags>
+  <Trailers>
+    <Trailer>https://www.youtube.com/watch?v=eOrNdBpGMv8</Trailer>
+  </Trailers>
+  <IMDB>tt2345678</IMDB>
+  <CollectionItems>
+    <CollectionItem>
+      <Path>/movies/The Avengers (2012)</Path>
+    </CollectionItem>
+    <CollectionItem>
+      <Path>/movies/Avengers Endgame (2019)</Path>
+    </CollectionItem>
+  </CollectionItems>
+</Item>
