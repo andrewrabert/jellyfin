@@ -105,6 +105,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.LocalMetadata.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Photos.Tests", "tests\Jellyfin.Photos.Tests\Jellyfin.Photos.Tests.csproj", "{99252674-A1D1-48FF-850E-B3C78F8B6E82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Data.Tests", "tests\Jellyfin.Data.Tests\Jellyfin.Data.Tests.csproj", "{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -631,6 +633,18 @@ Global
 		{99252674-A1D1-48FF-850E-B3C78F8B6E82}.Release|x64.Build.0 = Release|Any CPU
 		{99252674-A1D1-48FF-850E-B3C78F8B6E82}.Release|x86.ActiveCfg = Release|Any CPU
 		{99252674-A1D1-48FF-850E-B3C78F8B6E82}.Release|x86.Build.0 = Release|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Debug|x64.Build.0 = Debug|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Debug|x86.Build.0 = Debug|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Release|x64.ActiveCfg = Release|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Release|x64.Build.0 = Release|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Release|x86.ActiveCfg = Release|Any CPU
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -666,6 +680,7 @@ Global
 		{65CAB44E-6F70-4B88-8680-46C371BA7475} = {FBBB5129-006E-4AD7-BAD5-8B7CA1D10ED6}
 		{8402EFE8-FA6E-41AA-8A8C-47B02FA67467} = {FBBB5129-006E-4AD7-BAD5-8B7CA1D10ED6}
 		{99252674-A1D1-48FF-850E-B3C78F8B6E82} = {FBBB5129-006E-4AD7-BAD5-8B7CA1D10ED6}
+		{351F8F15-D01F-49EC-AF9D-F77AFA4B8ADB} = {FBBB5129-006E-4AD7-BAD5-8B7CA1D10ED6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3448830C-EBDC-426C-85CD-7BBB9651A7FE}
